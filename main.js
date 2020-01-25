@@ -2,33 +2,45 @@ function setup() {
   W = windowWidth;
   H = windowHeight;
   createCanvas(W, H);
-  c1 = new Circle(createVector(0, 0), 150);
-  c2 = new Circle(createVector(50, 50), 150);
+  c1 = new Circle(createVector(0, 0), 50);
+  c2 = new Circle(createVector(-50,150), 100);
 }
 
 function draw() {
   background(20);
   
+  push();
+
   translate(W/2, H/2);
-  rotate(-PI/2);
-  
   stroke(50);
   strokeWeight(1);
-  line(-H/2, 0, H/2, 0);
-  line(0, -W/2, 0, W/2);
+  line(-W/2, 0, W/2, 0);
+  line(0, -H/2, 0, H/2);
+  
+  v = createVector(mouseX - W/2, mouseY - H/2);
+  v.setMag(c1.r);
+  stroke(255);
+  line(c1.pos.x, c1.pos.y, v.x, v.y);
+  
+  c3 = new Circle(v, 100, 0);
+  points = calcIntersectionPoints(c2, c3);
+  
+  if (points) {  
+    c4 = new Circle(points[0], c2.r);
+    stroke(255);
+    line(c3.pos.x, c3.pos.y, points[0].x, points[0].y);
+    line(c2.pos.x, c2.pos.y, points[0].x, points[0].y);    
+  }
   
   c1.draw();
   c2.draw();
-  
-  points = calcIntersectionPoints(c1, c2);
-  
-  if (points) {
-    stroke(255,0,0);
-    strokeWeight(5);
-    point(points[0].x, points[0].y);
-    point(points[1].x, points[1].y);
-  }
+  c3.draw();
+  c4.draw();
+  pop();
+}
 
+function mouseClicked() {
+  c2.pos = createVector(mouseX - W/2, mouseY - H/2);
 }
 
 class Circle {
@@ -40,11 +52,12 @@ class Circle {
   
   draw() {
     noFill();
-    stroke(100);
+    stroke(50);
     strokeWeight(1);
     ellipse(this.pos.x, this.pos.y, this.r*2, this.r*2);
   }
 }
+
 
 
 function calcIntersectionPoints(A, B) {
@@ -74,6 +87,7 @@ function calcIntersectionPoints(A, B) {
   
   
 }
+
 
 
 
