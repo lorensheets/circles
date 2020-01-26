@@ -2,8 +2,12 @@ function setup() {
   W = windowWidth;
   H = windowHeight;
   createCanvas(W, H);
-  c1 = new Circle(createVector(0, 0), 50);
-  c2 = new Circle(createVector(-50,150), 100);
+  
+  lever1 = 50;
+  lever2 = 100;
+  
+  c1 = new Circle(createVector(0, 0), lever1);
+  c2 = new Circle(createVector(-100,-50), 150);
 }
 
 function draw() {
@@ -22,20 +26,32 @@ function draw() {
   stroke(255);
   line(c1.pos.x, c1.pos.y, v.x, v.y);
   
-  c3 = new Circle(v, 100, 0);
+  c3 = new Circle(v, lever2, 0);
   points = calcIntersectionPoints(c2, c3);
   
   if (points) {  
     c4 = new Circle(points[0], c2.r);
     stroke(255);
     line(c3.pos.x, c3.pos.y, points[0].x, points[0].y);
-    line(c2.pos.x, c2.pos.y, points[0].x, points[0].y);    
+    h = sqrt( (points[0].x - c2.pos.x)**2 + (points[0].y - c2.pos.y)**2 );
+    b = 50;
+    a = sqrt( h**2 - b**2 );
+    hyp = p5.Vector.sub(points[0], c2.pos);
+    v = createVector(0, a);
+    angle1 = asin(b / h);
+    angle2 = v.angleBetween(hyp);
+    v.rotate(angle1+angle2);
+    line(c2.pos.x, c2.pos.y, c2.pos.x + v.x*2, c2.pos.y + v.y*2);
+    line(c2.pos.x + v.x, c2.pos.y + v.y, points[0].x, points[0].y);
+    
+    
+    c4.draw();
   }
   
   c1.draw();
   c2.draw();
   c3.draw();
-  c4.draw();
+
   pop();
 }
 
@@ -87,7 +103,5 @@ function calcIntersectionPoints(A, B) {
   
   
 }
-
-
 
 
