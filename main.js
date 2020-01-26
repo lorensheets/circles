@@ -2,8 +2,9 @@ function setup() {
   W = windowWidth;
   H = windowHeight;
   createCanvas(W, H);
+  x_hat = createVector(-1, 0);
   
-  lever1 = 50;
+  lever1 = 15;
   lever2 = 100;
   
   c1 = new Circle(createVector(0, 0), lever1);
@@ -21,12 +22,12 @@ function draw() {
   line(-W/2, 0, W/2, 0);
   line(0, -H/2, 0, H/2);
   
-  v = createVector(mouseX - W/2, mouseY - H/2);
-  v.setMag(c1.r);
+  l1 = createVector(mouseX - W/2, mouseY - H/2);
+  l1.setMag(c1.r);
   stroke(255);
-  line(c1.pos.x, c1.pos.y, v.x, v.y);
+  line(c1.pos.x, c1.pos.y, l1.x, l1.y);
   
-  c3 = new Circle(v, lever2, 0);
+  c3 = new Circle(l1, lever2, 0);
   points = calcIntersectionPoints(c2, c3);
   
   if (points) {  
@@ -51,6 +52,10 @@ function draw() {
   c1.draw();
   c2.draw();
   c3.draw();
+  
+  stroke(255);
+  text( round(degrees(l1.angleBetween(x_hat))*10)/10 + "°" , c1.pos.x, c1.pos.y - 30);
+  text( round(degrees(angle1+angle2)*10)/10 + "°" , c2.pos.x, c2.pos.y - 30);
 
   pop();
 }
@@ -68,7 +73,7 @@ class Circle {
   
   draw() {
     noFill();
-    stroke(50);
+    stroke(30);
     strokeWeight(1);
     ellipse(this.pos.x, this.pos.y, this.r*2, this.r*2);
   }
